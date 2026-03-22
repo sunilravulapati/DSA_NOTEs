@@ -596,6 +596,7 @@
     <a class="nav-link" href="#framework"><span class="icon">🗺️</span>The 5-Step Framework</a>
     <a class="nav-link" href="#complexity"><span class="icon">⚡</span>Complexity Cheatsheet</a>
     <a class="nav-link" href="#keywords"><span class="icon">🔍</span>Keyword → Pattern Map</a>
+    <a class="nav-link" href="#pattern-traps"><span class="icon">🛑</span>Pattern Trap Guide</a>
   </div>
   <div class="nav-section">
     <div class="nav-section-title">Core Topics</div>
@@ -616,16 +617,16 @@
     <a class="nav-link" href="#heaps"><span class="icon">🏔️</span>Heaps</a>
   </div>
   <div class="nav-section">
+    <div class="nav-section-title">Practice</div>
+    <a class="nav-link" href="#problems"><span class="icon">📋</span>Full Problem List</a>
+  </div>
+  <div class="nav-section">
     <div class="nav-section-title">Coding Rounds</div>
     <a class="nav-link" href="#coding-round-strategy"><span class="icon">⏱️</span>Round Strategy</a>
     <a class="nav-link" href="#brute-optimize"><span class="icon">🚀</span>Brute → Optimal</a>
     <a class="nav-link" href="#monotonic-stack"><span class="icon">📊</span>Monotonic Stack</a>
     <a class="nav-link" href="#extra-problems"><span class="icon">🔥</span>Extra PDF Problems</a>
     <a class="nav-link" href="#backtracking-deep"><span class="icon">🌿</span>Backtracking Deep Dive</a>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-title">Practice</div>
-    <a class="nav-link" href="#problems"><span class="icon">📋</span>Full Problem List</a>
   </div>
   <div class="nav-section">
     <div class="nav-section-title">Full Stack</div>
@@ -916,6 +917,552 @@
         <div class="detector-arrow">→</div>
         <div class="detector-cue">"weighted shortest path", "minimum cost path"</div>
         <div class="detector-result"><strong style="color:#89ddff">Dijkstra</strong> (no negatives) or <strong style="color:#89ddff">Bellman-Ford</strong> (with negatives)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- PATTERN TRAP GUIDE -->
+  <!-- ════════════════════════════════════════ -->
+  <section id="pattern-traps">
+    <div class="chapter">
+      <div class="chapter-num" style="color:rgba(255,82,82,0.5)">⚠</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Pattern Trap Guide</div>
+        <div class="chapter-desc">Know when NOT to use a pattern — traps that silently kill your solution</div>
+      </div>
+    </div>
+
+    <div class="golden">
+      <div class="golden-title">✦ Universal Anti-Trap Rule — Run This FIRST on Every Problem</div>
+      <div class="golden-body">
+        Before choosing any pattern, answer these 4 questions in order:<br><br>
+        <strong>1. What is being asked?</strong> → count / max / existence / all combinations?<br>
+        <strong>2. What are the constraints?</strong> → negatives present? how large is n? sorted or unsorted?<br>
+        <strong>3. Can brute force work?</strong> → if n ≤ 10⁴, maybe O(n²) is fine — don't over-engineer<br>
+        <strong>4. Is there a simpler math/greedy solution?</strong> → DP is often overkill when a formula exists<br><br>
+        <em style="color:var(--muted)">Only after all 4 — pick your pattern.</em>
+      </div>
+    </div>
+
+    <div class="warn" style="margin-top:20px">
+      <div class="callout-label">🧠 Master Decision Rule</div>
+      <div class="callout-body">
+        <strong>Before coding, ask in this exact order:</strong><br>
+        1. Can I brute force it? (state it first regardless)<br>
+        2. Can I simplify the problem to a known shape?<br>
+        3. Can I model it mathematically? (factors, primes, modular arithmetic)<br>
+        4. Only then — choose a pattern and optimize
+      </div>
+    </div>
+
+    <!-- GRID LAYOUT FOR ALL PATTERNS -->
+    <h3 style="color:#fff;margin:28px 0 16px;font-family:'Space Grotesk',sans-serif">Every Pattern — When to Use & When to STOP</h3>
+
+    <!-- TWO POINTERS -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>👉 Two Pointers</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">sorted + pair → two pointers</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              Array is <strong>sorted</strong> (or sorting it loses no needed info)<br>
+              Finding <strong>pairs / triplets</strong> that satisfy a sum condition<br>
+              <strong>Opposite ends shrinking</strong> toward each other<br>
+              <strong>In-place partition</strong> (slow/fast pointer, remove duplicates)<br>
+              Palindrome check (compare from both ends)
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Array is <strong>NOT sorted</strong> and sorting destroys index info → use <strong>HashMap</strong><br>
+              You need <strong>original indices</strong> (Two Sum with indices) → HashMap is correct<br>
+              <strong>More than 2 independent variables</strong> interact at once<br>
+              Problem needs <strong>all subarrays</strong> checked — not just pairs<br>
+              Input has <strong>no monotonic property</strong> — moving pointer has no predictable effect
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREFIX SUM -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>∑ Prefix Sum / Suffix</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">sum + subarray + negatives → prefix sum</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Subarray sum</strong> queries (especially with negatives present)<br>
+              <strong>Left vs right comparison</strong> needed at every index<br>
+              <strong>Repeated sum queries</strong> over ranges → precompute once, answer in O(1)<br>
+              "Number of subarrays with sum = k" — prefix + HashMap combo<br>
+              Product of array except self
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              You reach for <strong>sliding window with negatives</strong> — that's wrong, use prefix sum instead<br>
+              No sum/cumulative quantity is involved — prefix is useless here<br>
+              Array is modified during queries — prefix must be <strong>static</strong><br>
+              You only need one range — O(n) loop is simpler than building prefix<br>
+              <strong>mp[0] = 1</strong> is forgotten → misses subarrays starting at index 0
+            </div>
+          </div>
+        </div>
+        <div class="tip" style="margin-top:10px">
+          <div class="callout-label">💡 The mp[0]=1 Trick</div>
+          <div class="callout-body">Always initialize <code>mp[0] = 1</code> before the loop in subarray sum = k problems. This handles subarrays that start from index 0. Forgetting this is one of the most common wrong answers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDING WINDOW -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🪟 Sliding Window</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">"at most k" → window | "exactly k" → atMost(k) - atMost(k-1)</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Contiguous subarray / substring</strong> with a condition<br>
+              All elements are <strong>non-negative</strong> (window shrinking decreases sum)<br>
+              "At most k distinct", "longest without repeating" type problems<br>
+              <strong>Dynamic condition</strong> maintained as window expands/shrinks<br>
+              Fixed-size window: max/min of every window of size k
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Negative numbers present</strong> → shrinking window doesn't decrease sum → use prefix sum<br>
+              <strong>Non-contiguous</strong> elements needed (subsequences) → use DP or two pointers<br>
+              <strong>Exactly k</strong> type problems — tricky, use <code>atMost(k) - atMost(k-1)</code> trick instead<br>
+              Validity depends on <strong>sorted order</strong> inside window — window can't handle this<br>
+              <strong>Multiple disjoint windows</strong> needed simultaneously
+            </div>
+          </div>
+        </div>
+        <div class="trick" style="margin-top:10px">
+          <div class="callout-label">🧠 Exactly K Trick</div>
+          <div class="callout-body">"Subarrays with exactly k distinct" = <code>atMost(k) - atMost(k-1)</code>. Write one helper function for "at most k" and call it twice. This pattern appears in many hard sliding window problems.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HASHING -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>#️⃣ Hashing</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">need O(1) lookup → hashing</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              Counting <strong>frequency</strong> of elements<br>
+              <strong>Fast existence check</strong> in O(1)<br>
+              Grouping by a <strong>common key</strong> (anagrams, isomorphic)<br>
+              Storing <strong>value → index</strong> mapping (Two Sum)<br>
+              Detecting <strong>duplicates</strong> or finding <strong>missing elements</strong>
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Using <code>unordered_map</code> when <strong>sorted order is needed</strong> → use <code>map</code><br>
+              <code>mp[key]</code> to check existence — this <strong>inserts a default 0</strong> → use <code>mp.count(key)</code><br>
+              <strong>Float/double as key</strong> → precision errors → multiply and use int<br>
+              <strong>Erasing while iterating</strong> with range-for → undefined behavior<br>
+              Array is tiny (≤ 26 chars) — use <code>int freq[26]</code> instead, much faster
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATRIX -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🔲 Matrix / Grid</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">grid → BFS/DFS with direction array</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Grid traversal</strong> with 4-directional or 8-directional neighbors<br>
+              <strong>Connected components</strong> in a 2D grid (islands)<br>
+              <strong>Shortest path</strong> in an unweighted grid → BFS<br>
+              Boundary DFS (mark cells touching border)<br>
+              In-place rotation / transpose problems
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Forgetting bounds check</strong> → always check <code>i≥0 && j≥0 && i&lt;m && j&lt;n</code> first<br>
+              <strong>Revisiting cells</strong> without marking visited → infinite loop<br>
+              Using DFS for <strong>shortest path</strong> → BFS guarantees shortest, DFS doesn't<br>
+              Modifying grid while BFS processes it without care → corrupted state<br>
+              Off-by-one in spiral / boundary shrinking — always check <code>top≤bot && left≤right</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONOTONIC STACK -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>📊 Stack / Monotonic Stack</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">"nearest greater/smaller" → monotonic stack</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Next/previous greater or smaller</strong> element problems<br>
+              <strong>Histogram / span / stock</strong> type problems<br>
+              <strong>Bracket matching</strong>, expression evaluation<br>
+              Sliding window maximum (monotonic deque)<br>
+              Asteroid collision, buildings with ocean view
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Using <strong>brute O(n²)</strong> for NGE when monotonic stack gives O(n)<br>
+              <strong>Wrong stack direction</strong>: increasing stack for NGE gives wrong answers<br>
+              Storing <strong>values instead of indices</strong> → can't compute width for histogram<br>
+              Not handling the <strong>remaining stack elements</strong> after the loop (they have no NGE)<br>
+              Using stack when a simple <strong>two-pointer</strong> pass is cleaner (e.g. Trapping Rain Water)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BFS / QUEUE -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🌊 Queue / BFS</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">minimum steps in graph → BFS</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Shortest path</strong> in unweighted graph/grid<br>
+              <strong>Level-order traversal</strong> of trees<br>
+              <strong>Multi-source BFS</strong> (rotten oranges, walls and gates)<br>
+              "Minimum steps / transformations" → Word Ladder type<br>
+              Expanding outward from multiple starting points simultaneously
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Using <strong>DFS for shortest path</strong> → BFS guarantees shortest, DFS explores deep first<br>
+              <strong>Not marking visited</strong> before adding to queue → same node added multiple times<br>
+              Using BFS on <strong>weighted graphs</strong> → use Dijkstra instead<br>
+              <strong>Snapshot queue size</strong> missing in level-order traversal → <code>int sz = q.size()</code> before inner loop<br>
+              Forgetting to handle the case where <strong>no path exists</strong> → return -1 not 0
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEAP -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🏔️ Priority Queue (Heap)</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">dynamic min/max → heap</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Top K elements</strong> — min-heap of size K for K largest<br>
+              <strong>Dynamically changing min/max</strong> (stream of numbers)<br>
+              <strong>Merge K sorted</strong> lists or arrays<br>
+              Greedy problems where always picking min/max greedily works<br>
+              Dijkstra's algorithm (weighted shortest path)
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Sorting once</strong> is enough — heap adds complexity for no reason<br>
+              Using <strong>max-heap for K largest</strong> — counterintuitive but min-heap of size K is correct<br>
+              <strong>Heap for exact K-th</strong> — QuickSelect is O(n) average vs O(n log K) for heap<br>
+              Forgetting that C++ <code>priority_queue</code> is <strong>max-heap by default</strong><br>
+              Using heap when a <strong>sorted array + binary search</strong> would be simpler and faster
+            </div>
+          </div>
+        </div>
+        <div class="trick" style="margin-top:10px">
+          <div class="callout-label">🧠 Min-heap for K Largest</div>
+          <div class="callout-body">To find K largest: use a <strong>min-heap of size K</strong>. Add elements, pop when size exceeds K. The smallest gets popped, leaving the K largest. Counterintuitive but correct — the min-heap tracks the "weakest survivor."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKED LIST -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🔗 Linked List</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">node.next → pointer logic | cycle → fast/slow</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Pointer reversal</strong> (reverse list, reverse k-group)<br>
+              <strong>Cycle detection</strong> → Floyd's fast/slow pointer<br>
+              <strong>Finding middle</strong> → slow/fast pointer<br>
+              <strong>Nth from end</strong> → two pointers with gap n<br>
+              Merging two sorted lists, partitioning
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Forgetting NULL checks</strong> → <code>curr && curr->next</code> before accessing <code>curr->next->next</code><br>
+              <strong>Losing the head pointer</strong> — always use a dummy node for insertions/deletions at head<br>
+              Not saving <code>nxt = curr->next</code> <strong>before</strong> reversing <code>curr->next = prev</code><br>
+              <strong>Off-by-one in gap</strong> for Nth from end → use n+1 gap with dummy node<br>
+              Returning <code>head</code> after deletion — return <code>dummy->next</code> instead
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BACKTRACKING -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🌿 Backtracking</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">"generate all" → backtracking</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>All combinations / permutations / subsets</strong> needed<br>
+              <strong>Constraint satisfaction</strong> (N-Queens, Sudoku)<br>
+              Building solutions <strong>incrementally</strong> with choices at each step<br>
+              Grid path finding with all paths needed<br>
+              Problem says "generate all" / "find all" / "list all"
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Forgetting pop_back()</strong> — path grows forever, gives wrong results<br>
+              <strong>No pruning</strong> → exponential with no speedup. Always check constraints early<br>
+              Passing <code>i</code> vs <code>i+1</code> wrong → reuse when shouldn't, or skip when shouldn't<br>
+              Using <code>i > 0</code> for duplicate skip instead of <code>i > start</code> → wrong subsets<br>
+              Using backtracking when <strong>DP would be O(n²)</strong> vs backtracking's O(2ⁿ) — DP wins
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GREEDY -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🏃 Greedy</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">"min/max with freedom to choose order" → try greedy</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Local optimal = global optimal</strong> (provable with exchange argument)<br>
+              <strong>Sorting reveals structure</strong> (intervals, job scheduling)<br>
+              Problem says "minimum number of X to cover Y"<br>
+              Activity selection / coin change (standard denominations)<br>
+              Jump Game, Gas Station, Candy distribution
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>Can't prove greedy works</strong> → test with counter-example first, else use DP<br>
+              Coin change with <strong>arbitrary denominations</strong> → greedy fails, use DP<br>
+              Problem has <strong>dependencies between choices</strong> → greedy is blind, DP needed<br>
+              <strong>0/1 knapsack</strong> → greedy by value/weight ratio fails, use DP<br>
+              Choosing greedy just because it "feels right" without verification
+            </div>
+          </div>
+        </div>
+        <div class="tip" style="margin-top:10px">
+          <div class="callout-label">💡 Greedy vs DP Quick Test</div>
+          <div class="callout-body">Try a small counter-example. If greedy fails it, use DP. If problem says "number of ways" → definitely DP. If problem says "minimum number of operations" with free choice of order → try greedy first.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DP -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>💎 Dynamic Programming</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">"take / not take" at each step → DP</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Overlapping subproblems</strong> — same state computed repeatedly in recursion<br>
+              <strong>Optimal substructure</strong> — best solution uses best sub-solutions<br>
+              "Number of ways", "min cost", "max profit" with constrained choices<br>
+              <strong>Take / not take</strong> decision at each element<br>
+              Sequence problems (LIS, LCS, Edit Distance, Palindrome)
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              <strong>No overlapping subproblems</strong> → pure recursion / backtracking is right<br>
+              A <strong>closed-form math formula</strong> exists (Fibonacci → O(1), trailing zeros → division)<br>
+              <strong>State space explodes</strong> → dp[i][j][k] with large bounds → out of memory<br>
+              Greedy actually works and is simpler — DP is overkill<br>
+              <strong>Returning before the base case</strong> in recursion — always define dp at i=0 or n
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAPHS -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🕸️ Graphs</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">connections / components → graph</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ BFS / DFS / DSU — Use When</div>
+            <div class="callout-body">
+              <strong>BFS</strong> → Shortest path unweighted, minimum steps, level-by-level<br>
+              <strong>DFS</strong> → Connected components, cycle detection, topological sort, DFS tree<br>
+              <strong>Dijkstra</strong> → Weighted shortest path (no negative edges)<br>
+              <strong>Bellman-Ford</strong> → Shortest path with negative edges<br>
+              <strong>DSU (Union-Find)</strong> → Dynamic connectivity, "are A and B connected?", MST
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Using <strong>DFS for shortest path</strong> → DFS explores deep, not shortest first<br>
+              <strong>Not marking visited</strong> before adding to queue/stack → revisit loops<br>
+              Using Dijkstra with <strong>negative weights</strong> → incorrect results, use Bellman-Ford<br>
+              Applying <strong>topological sort on undirected graph</strong> → meaningless<br>
+              Forgetting the <strong>stale entry check</strong> in Dijkstra: <code>if(d > dist[u]) continue;</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATH -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title" style="justify-content:space-between">
+        <span>🔢 Math / Number Theory</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">build number / factors / primes → math</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="gap:12px;margin-top:8px">
+          <div class="pattern" style="margin:0">
+            <div class="callout-label">✅ Use When</div>
+            <div class="callout-body">
+              <strong>Factors, primes, GCD/LCM</strong> problems<br>
+              <strong>Trailing zeros</strong> = count pairs of 2×5 in factorization<br>
+              <strong>Power(x, n)</strong> = fast exponentiation in O(log n)<br>
+              <strong>Palindrome number</strong> = reverse half and compare<br>
+              Modular arithmetic — always apply mod at each step to avoid overflow
+            </div>
+          </div>
+          <div class="danger" style="margin:0">
+            <div class="callout-label">❌ Traps — Don't Use When</div>
+            <div class="callout-body">
+              Using <strong>DP for Fibonacci</strong> when O(1) formula or matrix exponentiation exists<br>
+              <strong>Integer overflow</strong> in multiplication — always cast to <code>long long</code> before multiply<br>
+              <strong>Forgetting mod</strong> → large numbers silently overflow and give wrong answers<br>
+              Using <strong>sqrt(n) without casting</strong> → floating point precision errors<br>
+              Using <code>pow(x, n)</code> (float) instead of <strong>integer fast exponentiation</strong>
+            </div>
+          </div>
+        </div>
+        <div class="tip" style="margin-top:10px">
+          <div class="callout-label">💡 Key Math Patterns</div>
+          <div class="callout-body">
+            Trailing zeros in n! = <code>n/5 + n/25 + n/125 + ...</code> (count factor 5s)<br>
+            GCD = Euclidean algorithm: <code>gcd(a,b) = gcd(b, a%b)</code><br>
+            Fast power: <code>if n%2==0: return pow(x*x, n/2)</code> else <code>return x * pow(x, n-1)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL MASTER TABLE -->
+    <h3 style="color:#fff;margin:28px 0 14px;font-family:'Space Grotesk',sans-serif">Master Cheatsheet — Pattern Selector at a Glance</h3>
+    <table>
+      <thead>
+        <tr><th>Trigger Words</th><th>First Thought</th><th>If That Fails</th><th>Hard No</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>sorted + pair/triplet sum</td><td class="tc-good">Two Pointers</td><td>HashMap (if unsorted)</td><td class="tc-bad">Nested loop O(n²)</td></tr>
+        <tr><td>subarray sum (with negatives)</td><td class="tc-good">Prefix Sum + HashMap</td><td>Kadane's (max only)</td><td class="tc-bad">Sliding Window ❌</td></tr>
+        <tr><td>longest/shortest contiguous</td><td class="tc-good">Sliding Window</td><td>Prefix Sum if negatives</td><td class="tc-bad">SW with negatives ❌</td></tr>
+        <tr><td>frequency / group / lookup</td><td class="tc-good">HashMap / HashSet</td><td>Array[26] if chars</td><td class="tc-bad">Nested search O(n²)</td></tr>
+        <tr><td>next greater/smaller element</td><td class="tc-good">Monotonic Stack</td><td>—</td><td class="tc-bad">Brute O(n²)</td></tr>
+        <tr><td>shortest path (unweighted)</td><td class="tc-good">BFS</td><td>—</td><td class="tc-bad">DFS (no guarantee) ❌</td></tr>
+        <tr><td>shortest path (weighted)</td><td class="tc-good">Dijkstra</td><td>Bellman-Ford (negatives)</td><td class="tc-bad">BFS on weighted ❌</td></tr>
+        <tr><td>top K / dynamic min-max</td><td class="tc-good">Heap</td><td>QuickSelect for exact K</td><td class="tc-bad">Re-sort every time</td></tr>
+        <tr><td>generate all / find all</td><td class="tc-good">Backtracking</td><td>Bitmask DP if n≤20</td><td class="tc-bad">No pruning = TLE</td></tr>
+        <tr><td>min cost / max profit (choices)</td><td class="tc-good">DP (take/not take)</td><td>Greedy if provable</td><td class="tc-bad">DP without base case</td></tr>
+        <tr><td>connected components / union</td><td class="tc-good">DSU / DFS</td><td>BFS</td><td class="tc-bad">—</td></tr>
+        <tr><td>factors / primes / trailing zeros</td><td class="tc-good">Math formula</td><td>Sieve of Eratosthenes</td><td class="tc-bad">DP when formula exists</td></tr>
+      </tbody>
+    </table>
+
+    <div class="optim" style="margin-top:20px">
+      <div class="optim-title">🔥 The 30-Second Pattern Decision</div>
+      <div class="optim-body">
+        <strong>Step 1:</strong> Is n ≤ 20? → Backtracking / bitmask. Is n ≤ 1000? → O(n²) DP. Is n ≤ 10⁵? → O(n log n) or O(n).<br>
+        <strong>Step 2:</strong> Does the problem have negatives in an array with sum queries? → Prefix Sum (not sliding window).<br>
+        <strong>Step 3:</strong> Does it say "shortest path"? → BFS (unweighted) or Dijkstra (weighted).<br>
+        <strong>Step 4:</strong> Does it say "generate all" / "all combinations"? → Backtracking.<br>
+        <strong>Step 5:</strong> Does it say "number of ways" / "min cost"? → DP.<br>
+        <strong>Step 6:</strong> Does it say "top K" / "K largest"? → Min-heap of size K.<br>
+        <strong>Step 7:</strong> Nothing matches? → Start with brute force and look for the bottleneck.
       </div>
     </div>
   </section>
@@ -1856,6 +2403,98 @@ dp[<span class="num">0</span>] = <span class="num">0</span>;
 <span class="kw">return</span> tails.<span class="fn">size</span>();</pre>
       </div>
     </details>
+    <details>
+  <summary>DP Vector Dimensions — Never Get the Size Wrong Again</summary>
+  <div class="details-body">
+
+    <div class="tip">
+      <div class="callout-label">💡 The +1 Rule</div>
+      <div class="callout-body">
+        Add <strong>+1</strong> on any dimension where index 0 means "empty / nothing used yet" — so <code>dp[0]</code> is your base case and <code>dp[n]</code> is your full answer without off-by-one panic. Skip the +1 when indexing directly into a grid cell (in-place grid DP).
+      </div>
+    </div>
+
+    <h3 style="color:#fff;margin:16px 0 10px;font-family:'Space Grotesk',sans-serif;font-size:15px">1D DP — one variable changes</h3>
+    <div class="formula">size = n + 1 &nbsp;|&nbsp; dp[i] = answer for first i elements (or amount i)</div>
+    <pre><span class="cm">// Template — Climbing Stairs, House Robber, Coin Change</span>
+<span class="ty">int</span> n = nums.<span class="fn">size</span>();
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(n + <span class="num">1</span>, <span class="num">0</span>);   <span class="cm">// n+1 so dp[n] is valid</span>
+dp[<span class="num">0</span>] = base_case;           <span class="cm">// set BEFORE the loop, not inside it</span>
+
+<span class="cm">// For "amount" problems (Coin Change): size = amount + 1</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(amount + <span class="num">1</span>, amount + <span class="num">1</span>);  <span class="cm">// amount+1 acts as "infinity"</span>
+dp[<span class="num">0</span>] = <span class="num">0</span>;
+
+<span class="cm">// Space optimization — when dp[i] only needs dp[i-1] and dp[i-2]</span>
+<span class="ty">int</span> prev2 = <span class="num">0</span>, prev1 = base;
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">2</span>; i &lt;= n; i++) {
+    <span class="ty">int</span> curr = <span class="fn">max</span>(prev1, prev2 + nums[i]);
+    prev2 = prev1;
+    prev1 = curr;
+}</pre>
+
+    <h3 style="color:#fff;margin:16px 0 10px;font-family:'Space Grotesk',sans-serif;font-size:15px">2D DP — two things change</h3>
+    <div class="formula">size = (m+1) × (n+1) &nbsp;|&nbsp; dp[i][j] = answer using first i of s1 and first j of s2</div>
+    <pre><span class="cm">// Two strings — LCS, Edit Distance, Interleaving String</span>
+<span class="ty">int</span> m = s1.<span class="fn">size</span>(), n = s2.<span class="fn">size</span>();
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m + <span class="num">1</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n + <span class="num">1</span>, <span class="num">0</span>));
+<span class="cm">// Always init row 0 and col 0 before the main loop!</span>
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i &lt;= m; i++) dp[i][<span class="num">0</span>] = i; <span class="cm">// Edit Distance base</span>
+<span class="kw">for</span> (<span class="ty">int</span> j = <span class="num">0</span>; j &lt;= n; j++) dp[<span class="num">0</span>][j] = j;
+
+<span class="cm">// Grid (in-place) — Unique Paths, Min Path Sum</span>
+<span class="ty">int</span> m = grid.<span class="fn">size</span>(), n = grid[<span class="num">0</span>].<span class="fn">size</span>();
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n, <span class="num">0</span>));  <span class="cm">// m×n, no +1</span>
+
+<span class="cm">// 0/1 Knapsack — items × capacity</span>
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(n + <span class="num">1</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(W + <span class="num">1</span>, <span class="num">0</span>));
+<span class="cm">// dp[i][w] = max value using first i items with capacity w</span>
+
+<span class="cm">// Interval DP — Palindrome Partitioning, Burst Balloons</span>
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n, <span class="num">0</span>));
+<span class="cm">// dp[i][j] = answer for subarray i..j (inclusive), iterate by LENGTH</span>
+<span class="kw">for</span> (<span class="ty">int</span> len = <span class="num">2</span>; len &lt;= n; len++)
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="num">0</span>; i + len - <span class="num">1</span> &lt; n; i++) {
+        <span class="ty">int</span> j = i + len - <span class="num">1</span>;
+        <span class="cm">// dp[i][j] = ...</span>
+    }</pre>
+
+    <h3 style="color:#fff;margin:16px 0 10px;font-family:'Space Grotesk',sans-serif;font-size:15px">3D DP — three things change (stock + k transactions)</h3>
+    <div class="formula">dp[i][j][k] — typically: day × transactions_used × holding (0 or 1)</div>
+    <pre><span class="cm">// Stock with k transactions — Best Time III / IV</span>
+<span class="ty">int</span> n = prices.<span class="fn">size</span>();
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&gt; dp(n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;(k + <span class="num">1</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(<span class="num">2</span>, <span class="num">0</span>)));
+<span class="cm">// dp[day][buys_used][holding]</span>
+<span class="cm">// last dim is always size 2: 0 = not holding, 1 = holding</span>
+
+<span class="cm">// Memory check before declaring:</span>
+<span class="cm">// n=100, k=10 → 100×11×2 = 2200 ints = fine</span>
+<span class="cm">// If k >= n/2 → treat as unlimited, use simpler 1D/2D DP instead</span></pre>
+
+    <div class="warn">
+      <div class="callout-label">⚠️ Init Value Cheatsheet</div>
+      <div class="callout-body">
+        <strong>"min cost"</strong> → init with <code>n+1</code> or <code>INT_MAX/2</code> (safe infinity, avoids overflow when you add to it)<br>
+        <strong>"max value"</strong> → init with <code>0</code> or <code>INT_MIN</code><br>
+        <strong>"number of ways"</strong> → init with <code>0</code>, then set <code>dp[0] = 1</code> (empty = 1 way)<br>
+        <strong>"is it possible?"</strong> → <code>vector&lt;bool&gt;</code> init <code>false</code>, then <code>dp[0] = true</code>
+      </div>
+    </div>
+
+    <div class="trick" style="margin-top:12px">
+      <div class="callout-label">🧠 Quick Dimension Picker</div>
+      <div class="callout-body">
+        <strong>One string/array, one variable</strong> → <code>dp[n+1]</code><br>
+        <strong>Two strings</strong> → <code>dp[m+1][n+1]</code>, init row 0 and col 0<br>
+        <strong>Grid, no extra state</strong> → <code>dp[m][n]</code> (no +1)<br>
+        <strong>Items + capacity</strong> → <code>dp[n+1][W+1]</code><br>
+        <strong>Substring range [i..j]</strong> → <code>dp[n][n]</code>, iterate by length<br>
+        <strong>Day + transactions + held</strong> → <code>dp[n][k+1][2]</code>
+      </div>
+    </div>
+
+  </div>
+</details>
   </section>
 
   <!-- BIT MANIPULATION -->
